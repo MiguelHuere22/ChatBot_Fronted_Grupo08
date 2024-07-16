@@ -1,0 +1,81 @@
+<div class="menu-estudiante">
+  <div class="header-bar">
+    <div class="header-content">
+      <button class="toggle-menu-button" (click)="toggleMenu()">☰</button>
+      <div class="title">
+        <h1>INTELIGENCIA ARTIFICIAL</h1>
+      </div>
+      <div class="header-center">
+        <marquee scrollAmount="9px">
+          <h1>FISI-Ingeniería de Sistemas</h1>
+        </marquee>
+      </div>
+      <div class="logo">
+        <img src="/assets/unmsm.png" alt="UNMSM Logo">
+        <span>UNMSM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="sidebar" [ngClass]="{'sidebar-hidden': isMenuHidden}">
+      <div class="user-info">
+        <div class="user-icon">
+          <img src="/assets/usuario.png" alt="User Icon">
+        </div>
+        <div class="user-details">
+          <p>{{ nombres }} {{ apellidoPaterno }} {{ apellidoMaterno }} {{username}}</p>
+        </div>
+      </div>
+      <ul class="menu-options">
+        <li><a href="#" (click)="selectOption('bienvenida'); $event.preventDefault();">Bienvenida</a></li>
+        <li><a href="#" (click)="selectOption('chatbot'); $event.preventDefault();">Chatbot</a></li>
+      </ul>
+      <div class="logout">
+        <a href="#" (click)="logout()">Cerrar sesión</a>
+      </div>
+    </div>
+
+    <div class="main-content" [ngClass]="{'menu-hidden': isMenuHidden}">
+      <div *ngIf="selectedOption === 'bienvenida'">
+        <div class="welcome-content">
+          <h1>Bienvenido</h1>
+          <p>¡Hola! Soy SanMarBot, tu asistente virtual de la Universidad Nacional Mayor de San Marcos. Estoy aquí para ayudarte con cualquier consulta que tengas sobre nuestra universidad, brindarte apoyo y recursos para manejar la ansiedad, y ofrecerte orientación en tu vida académica. No estás solo, nuestra comunidad está aquí para ti. ¡Comencemos!</p>
+          <img src="assets/logoMenuEstudiante.png" alt="Logo Menu Estudiante">
+        </div>
+      </div>
+
+      <div *ngIf="selectedOption === 'chatbot'">
+        <div class="chat-container">
+          <div class="chat-history">
+            <h3>Historial de conversaciones</h3>
+            <button class="new-conversation-button" (click)="startNewConversation()">Nueva Conversación</button>
+            <div *ngFor="let conversation of conversations" class="conversation-item" [ngClass]="{'selected': conversation.titulo === currentConversationTitle}">
+              <p (click)="selectConversation(conversation.titulo)">{{ conversation.titulo }}</p>
+              <button class="delete-button" (click)="confirmDeleteConversation(conversation.titulo)">X</button>
+            </div>
+          </div>
+          <div class="chat-box">
+            <div class="messages">
+              <div *ngFor="let message of selectedConversationMessages">
+                <div [ngClass]="{'user-message': message.isUser, 'bot-message': !message.isUser}">
+                  <p [innerHTML]="message.text | newlineToBr"></p>
+                </div>
+              </div>
+            </div>
+            <div class="message-input">
+              <input type="text" [(ngModel)]="userMessage" placeholder="Escribe tu pregunta aquí..." />
+              <label for="fileInput" class="file-input-label">Seleccionar archivo</label>
+              <input type="file" id="fileInput" (change)="onFileSelected($event)" />
+              <div *ngIf="selectedFile" class="selected-file">
+                <p>{{ selectedFile.name }}</p>
+                <button class="remove-file-button" (click)="removeSelectedFile()">X</button>
+              </div>
+              <button (click)="sendMessage()">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
